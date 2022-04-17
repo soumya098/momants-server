@@ -5,11 +5,12 @@ const postSchema = mongoose.Schema(
 		title: String,
 		message: String,
 		creator: String,
+		userName: String,
 		tags: [String],
 		imageFile: String,
-		likeCount: {
-			type: Number,
-			default: 0,
+		likes: {
+			type: [String],
+			default: [],
 		},
 	},
 	{

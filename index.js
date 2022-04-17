@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import postRoutes from "./routes/postRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import dotenv from "dotenv";
 
 //app config
@@ -32,3 +33,4 @@ app.get("/", (req, res) => {
 	res.status(200).send("Welcome to Memories Api");
 });
 app.use("/posts", postRoutes);
+app.use("/user", userRoutes);

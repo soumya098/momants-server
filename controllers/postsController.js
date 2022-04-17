@@ -12,7 +12,7 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
 	const body = req.body;
-	const newPost = new PostModel(body);
+	const newPost = new PostModel({ ...body, creator: req.userId });
 
 	try {
 		await newPost.save();
@@ -47,12 +47,21 @@ export const deletePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
 	const { id } = req.params;
+	if (!req.userId) return res.status(200).json("User not Authorized");
 
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).json("no post found with that id");
 	} else {
 		const post = await PostModel.findById(id);
-		const updatedPost = await PostModel.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+		const index = post.likes.findIndex((id) => id === String(req.userId));
+		if (index === -1) {
+			//like post
+			post.likes.push(req.userId);
+		} else {
+			//dislike post
+			post.likes = post.likes.filter((id) => id !== String(req.userId));
+		}
+		const updatedPost = await PostModel.findByIdAndUpdate(id, post, { new: true });
 		res.status(200).json(updatedPost);
 	}
 };
