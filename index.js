@@ -29,8 +29,6 @@ mongoose
 // mongoose.set("useFindAndModify", false);
 
 //api-routes endpoints
-app.get("/", (req, res) => {
-	res.status(200).send("Welcome to Memories Api");
-});
+app.get("/", (req, res) => res.status(200).send("Welcome to Memories Api"));
 app.use("/posts", postRoutes);
 app.use("/user", userRoutes);

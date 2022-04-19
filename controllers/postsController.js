@@ -10,6 +10,20 @@ export const getPosts = async (req, res) => {
 	}
 };
 
+export const getPostsBySearch = async (req, res) => {
+	const { q: searchQuery, tags } = req.query;
+
+	try {
+		const title = new RegExp(searchQuery, "i");
+		const tags_arr = tags.split(",");
+		// const posts = await PostModel.where("title").regex(title);
+		const posts = await PostModel.find({ $or: [{ title: { $regex: title } }, { tags: { $in: tags_arr } }] });
+		res.status(200).send(posts);
+	} catch (err) {
+		res.status(404).send({ msg: err.message });
+	}
+};
+
 export const createPost = async (req, res) => {
 	const body = req.body;
 	const newPost = new PostModel({ ...body, creator: req.userId });

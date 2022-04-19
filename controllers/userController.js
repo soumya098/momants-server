@@ -6,10 +6,10 @@ export const signIn = async (req, res) => {
 	const { email, password } = req.body;
 	try {
 		const existingUser = await UserModel.findOne({ email: email });
-		if (!existingUser) return res.status(404).json({ message: "User does not exist" });
+		if (!existingUser) return res.status(401).send({ message: "User does not exist" });
 
 		const isCorrectPassword = await bcrypt.compare(password, existingUser.password);
-		if (!isCorrectPassword) return res.status(400).json({ message: "Invalid Credentials" });
+		if (!isCorrectPassword) return res.status(400).send({ message: "Invalid Credentials" });
 
 		const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, "test", { expiresIn: "1hr" });
 
@@ -23,9 +23,9 @@ export const signUp = async (req, res) => {
 	const { email, password, firstName, lastName, confirmPassword } = req.body;
 	try {
 		const existingUser = await UserModel.findOne({ email: email });
-		if (existingUser) return res.status(400).json({ message: "User already exist" });
+		if (existingUser) return res.status(400).send({ message: "User already exist" });
 
-		if (password !== confirmPassword) return res.status(400).json({ message: "Passwords do not match" });
+		if (password !== confirmPassword) return res.status(400).send({ message: "Passwords do not match" });
 
 		const hashedPassWord = await bcrypt.hash(password, 12);
 		const newUser = await UserModel.create({ email: email, password: hashedPassWord, name: `${firstName} ${lastName}` });
