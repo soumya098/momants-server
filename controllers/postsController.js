@@ -2,9 +2,14 @@ import PostModel from "../models/post.js";
 import mongoose from "mongoose";
 
 export const getPosts = async (req, res) => {
+	const { page } = req.query;
 	try {
-		const posts = await PostModel.find();
-		res.status(200).json(posts);
+		const LIMIT = 2;
+		const startIndex = (parseInt(page) - 1) * LIMIT;
+		const total = await PostModel.countDocuments({});
+		const posts = await PostModel.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+
+		res.status(200).json({ posts: posts, currPage: parseInt(page), totalPages: Math.ceil(total / LIMIT) });
 	} catch (err) {
 		res.status(404).json({ msg: err.message });
 	}
