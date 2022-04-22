@@ -5,13 +5,23 @@ export const getPosts = async (req, res) => {
 	const { page } = req.query;
 	try {
 		const LIMIT = 2;
-		const startIndex = (parseInt(page) - 1) * LIMIT;
+		const startIndex = (Number(page) - 1) * LIMIT;
 		const total = await PostModel.countDocuments({});
 		const posts = await PostModel.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
 
-		res.status(200).json({ posts: posts, currPage: parseInt(page), totalPages: Math.ceil(total / LIMIT) });
+		res.status(200).json({ posts: posts, currPage: Number(page), totalPages: Math.ceil(total / LIMIT) });
 	} catch (err) {
 		res.status(404).json({ msg: err.message });
+	}
+};
+
+export const getPost = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const post = await PostModel.findById(id);
+		res.status(200).send(post);
+	} catch (err) {
+		res.status(404).send({ msg: err.message });
 	}
 };
 
