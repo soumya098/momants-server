@@ -6,8 +6,8 @@ const router = express.Router();
 
 // '/posts' prepended
 router.get("/", getPosts);
-router.get("/:id", getPost);
 router.get("/search", getPostsBySearch);
+router.get("/:id", getPost);
 
 router.post("/", Auth, createPost);
 router.patch("/:id", Auth, updatePost);
