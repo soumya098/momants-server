@@ -9,8 +9,8 @@ import dotenv from "dotenv";
 
 //app config
 const app = express();
-const PORT = process.env.PORT || 5000;
 dotenv.config();
+const PORT = process.env.PORT || 5000;
 
 //middlewares
 //app.use(express.json());
